@@ -1,0 +1,7 @@
+*.back
+*.bak
+~*
+*~
+*.log
+pkg/
+bin/

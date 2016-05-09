@@ -1,0 +1,14 @@
+#!/bin/bash
+
+filedir=`dirname $0`
+cd $filedir/../..
+MYGOPATH=`pwd`
+echo $MYGOPATH
+export GOPATH=$GOPATH:$MYGOPATH
+
+go get github.com/go-sql-driver/mysql
+go get github.com/jinzhu/gorm
+go get github.com/zjwdmlmx/goini
+go get github.com/zjwdmlmx/freecache
+
+go install ikether/odcsock
