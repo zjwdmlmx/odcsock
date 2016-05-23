@@ -174,6 +174,7 @@ func (ctrl *LocationController) Init() (err error) {
 
 func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage, replay *application.Replay) (err error) {
 	log.Println(*incomingMsg.Command)
+	log.Println(incomingMsg.Params)
 
 	// is the incoming message is a SOS
 	if incomingMsg.Command.State == 0xefffffff {
