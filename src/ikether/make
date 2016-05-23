@@ -3,8 +3,8 @@
 filedir=`dirname $0`
 cd $filedir/../..
 MYGOPATH=`pwd`
-echo $MYGOPATH
-export GOPATH=$GOPATH:$MYGOPATH
+
+export GOPATH=$MYGOPATH
 
 go get github.com/go-sql-driver/mysql
 go get github.com/jinzhu/gorm
