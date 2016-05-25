@@ -1,3 +1,9 @@
+//
+// Author: ikether
+// Email: ikether@126.com
+//
+// Copyright 2016 ikether. All Right reserved.
+
 package db
 
 import (

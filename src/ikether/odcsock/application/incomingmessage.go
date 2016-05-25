@@ -23,7 +23,7 @@ type IncomingMessage struct {
 	buffer *bufio.Reader
 
 	Params  []string
-	Command *proto.ClientCommand
+	Command proto.Command
 }
 
 func NewIncomingMessage(conn net.Conn) *IncomingMessage {
@@ -42,12 +42,19 @@ func (v *IncomingMessage) ReadMessage() (err error) {
 		return
 	}
 
-	v.Params, err = proto.ParseParams(cmd)
+	v.Params, err = proto.ParseStringToParams(cmd)
 
 	if err != nil {
 		return
 	}
 
-	v.Command, err = proto.ParamsToClientCommand(v.Params)
+	v.Command = &proto.V1Command{}
+
+	err = v.Command.ParseParams(v.Params)
+
+	if err != nil {
+		return
+	}
+
 	return
 }

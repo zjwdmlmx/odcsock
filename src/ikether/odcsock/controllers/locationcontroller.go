@@ -1,3 +1,9 @@
+//
+// Author: ikether
+// Email: ikether@126.com
+//
+// Copyright 2016 ikether. All Right reserved.
+
 package controllers
 
 import (
@@ -49,7 +55,7 @@ type LocationController struct {
 }
 
 // login the odcser server
-func (ctrl *LocationController) loginDevice(cmd *proto.ClientCommand) (sessionid string, err error) {
+func (ctrl *LocationController) loginDevice(cmd *proto.V1Command) (sessionid string, err error) {
 	var (
 		device   model.WearableDevice
 		jsonByte []byte
@@ -108,7 +114,7 @@ func (ctrl *LocationController) loginDevice(cmd *proto.ClientCommand) (sessionid
 }
 
 // send the sos message to odcser server for the device client
-func (ctrl *LocationController) sendOldSos(cmd *proto.ClientCommand) (err error) {
+func (ctrl *LocationController) sendOldSos(cmd *proto.V1Command) (err error) {
 	var (
 		sessionid string
 		jsonByte  []byte
@@ -136,6 +142,12 @@ func (ctrl *LocationController) sendOldSos(cmd *proto.ClientCommand) (err error)
 	return
 }
 
+/**
+ * get user' id with device IMEI
+ *
+ * @param imei the imei code for device
+ * @return user's id and error
+ */
 func (ctrl *LocationController) getUid(imei string) (uid uint64, err error) {
 	var (
 		cacheErr error
@@ -173,12 +185,19 @@ func (ctrl *LocationController) Init() (err error) {
 }
 
 func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage, replay *application.Replay) (err error) {
-	log.Println(*incomingMsg.Command)
+	Command, ok := incomingMsg.Command.(*proto.V1Command)
+
+	if !ok {
+		err = errors.New("unknow error in controller LocationController, when parse Command!")
+		return
+	}
+
+	log.Println(*Command)
 	log.Println(incomingMsg.Params)
 
 	// is the incoming message is a SOS
-	if incomingMsg.Command.State == 0xefffffff {
-		err = ctrl.sendOldSos(incomingMsg.Command)
+	if Command.State == 0xefffffff {
+		err = ctrl.sendOldSos(Command)
 
 		if err != nil {
 			return
@@ -186,18 +205,18 @@ func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage,
 	}
 
 	// is the incoming message's data valid
-	if !incomingMsg.Command.Valid {
+	if !Command.Valid {
 		return
 	}
 
 	var uid uint64
 
-	uid, err = ctrl.getUid(incomingMsg.Command.Id)
+	uid, err = ctrl.getUid(Command.Id)
 
 	currPosition := model.Position{
-		Latitude:  incomingMsg.Command.Latitude,
-		Longitude: incomingMsg.Command.Longitude,
-		Time:      incomingMsg.Command.Time,
+		Latitude:  Command.Latitude,
+		Longitude: Command.Longitude,
+		Time:      Command.Time,
 		Uid:       uid,
 	}
 
