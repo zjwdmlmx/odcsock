@@ -15,6 +15,17 @@ import (
 	"net"
 )
 
+const (
+	echo = `
+           _      _____             _   _
+  ____    | |____|  ___\ ____  ____| | / /
+ / __ \ __| |  __| |___ / __ \|  __| |/ /
+| |__| | _  | |__|____ | |__| | |__| |\ \
+ \____/\____|____\_____|\____/|____|_| \_\
+Copyright 2016 ikether. All Right reserved.
+`
+)
+
 func handleConnection(conn net.Conn, router *application.Router) {
 	log.Println("connection setup from", conn.RemoteAddr())
 
@@ -59,6 +70,8 @@ func main() {
 
 	router := application.NewRouter()
 	initServer(router)
+
+	fmt.Print(echo)
 
 	for {
 		conn, err := listener.Accept()

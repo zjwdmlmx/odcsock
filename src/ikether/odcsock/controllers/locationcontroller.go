@@ -195,7 +195,7 @@ func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage,
 	log.Println(*Command)
 	log.Println(incomingMsg.Params)
 
-	// is the incoming message is a SOS
+	// is the incoming message a SOS
 	if Command.State == 0xefffffff {
 		err = ctrl.sendOldSos(Command)
 

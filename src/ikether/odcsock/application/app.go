@@ -17,8 +17,6 @@ type Application struct {
 	conn   net.Conn
 }
 
-var TheRouter *Router = NewRouter()
-
 func NewApplication(conn net.Conn, router *Router) *Application {
 	return &Application{router, conn}
 }
