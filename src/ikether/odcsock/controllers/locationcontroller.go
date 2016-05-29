@@ -131,7 +131,7 @@ func (ctrl *LocationController) sendOldSos(cmd *proto.V1Command) (err error) {
 		La:   cmd.Latitude,
 		Lo:   cmd.Longitude,
 		Date: cmd.Time.Unix(),
-		Acc:  2,
+		Acc:  11,
 	})
 
 	_, err = ctrl.client.Post(host+oldSosPath, "application/json", bytes.NewBuffer(jsonByte))

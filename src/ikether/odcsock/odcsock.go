@@ -23,6 +23,7 @@ const (
 | |__| | _  | |__|____ | |__| | |__| |\ \
  \____/\____|____\_____|\____/|____|_| \_\
 Copyright 2016 ikether. All Right reserved.
+
 `
 )
 
@@ -71,7 +72,7 @@ func main() {
 	router := application.NewRouter()
 	initServer(router)
 
-	fmt.Print(echo)
+	log.Print(echo)
 
 	for {
 		conn, err := listener.Accept()
