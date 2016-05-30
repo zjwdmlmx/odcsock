@@ -8,6 +8,7 @@ package application
 
 import (
 	"errors"
+	"io"
 	"log"
 	"net"
 )
@@ -30,7 +31,8 @@ func (app *Application) Handle() (err error) {
 
 		if err != nil {
 			log.Println(err)
-			if err.Error() == "EOF" {
+			// unacceptable errors
+			if err == io.EOF || err == io.ErrUnexpectedEOF || err == io.ErrClosedPipe {
 				break
 			}
 			continue

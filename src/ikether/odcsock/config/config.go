@@ -16,6 +16,7 @@ var Config *goini.INI
 
 func init() {
 	Config = goini.New()
+	// read configure from .ini file
 	err := Config.ParseFile("/etc/odcsock.cnf")
 
 	if err != nil {

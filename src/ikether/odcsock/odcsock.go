@@ -32,8 +32,11 @@ func handleConnection(conn net.Conn, router *application.Router) {
 
 	app := application.NewApplication(conn, router)
 	err := app.Handle()
+
+	/**
+	 * If bad error occured, just finished the goroutine
+	 */
 	if err != nil {
-		log.Println(err)
 		log.Println("Connection will be closed!")
 		conn.Close()
 	}
@@ -81,6 +84,7 @@ func main() {
 			log.Println("accept failed! with error:", err)
 		}
 
+		// foreach connection run a goroutine to handle the commands from remote
 		go handleConnection(conn, router)
 	}
 }

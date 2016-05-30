@@ -16,7 +16,7 @@ var Client *http.Client
 func init() {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
+			InsecureSkipVerify: true, // http client with skip verify of CA
 		},
 		DisableCompression: false,
 		DisableKeepAlives:  true,

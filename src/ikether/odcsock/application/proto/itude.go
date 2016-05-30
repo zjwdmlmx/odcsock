@@ -19,8 +19,8 @@ var (
 
 const (
 	// for function parseItude
-	longitude_type = uint8(1)
-	latitude_type  = uint8(2)
+	longitude_type uint8 = 1
+	latitude_type  uint8 = 2
 )
 
 func checkRegexSubmatch(matchs [][]string) (valid bool) {

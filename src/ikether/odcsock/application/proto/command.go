@@ -8,7 +8,6 @@ package proto
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 )
@@ -54,23 +53,67 @@ type Command interface {
  * All command's base field
  */
 type command_base struct {
+	/**
+	 * the vendor of the remote device
+	 */
 	Vendor string
-	Id     string
-	Cmd    string
+
+	/**
+	 * the IMEI ID number
+	 */
+	Id string
+
+	/**
+	 * the command name of current command
+	 */
+	Cmd string
 }
 
 type V1Command struct {
 	command_base
-	Valid     bool
-	Time      time.Time
-	Latitude  float64
+
+	/**
+	 * is the command Valid
+	 */
+	Valid bool
+
+	/**
+	 * the time of this command created
+	 * @warning cause of the remote device's time is not always accuracy
+	 * the time is reset to the command Server recived
+	 */
+	Time time.Time
+
+	/**
+	 * the latitude of the device's Location
+	 */
+	Latitude float64
+
+	/**
+	 * the longitude of the device's location
+	 */
 	Longitude float64
-	State     uint32
-	// now just do not need belows
+
+	/**
+	 * the status of the device
+	 */
+	State uint32
+
+	/**
+	 * now just do not need belows
+	 */
 	//Speed       float32
 	//Direction   uint16
 	//Battery     uint8
 }
+
+var (
+	DEVICE_STATE_SOS uint32 = 0xefffffff
+	/**
+	 * TODO
+	 * Device state of others
+	 */
+)
 
 func (cmd *V1Command) GetCmd() string {
 	return cmd.Cmd
@@ -100,11 +143,13 @@ func (cmd *V1Command) ParseParams(params []string) (err error) {
 		return
 	}
 
-	cmd.Time, err = time.ParseInLocation("020106150405", fmt.Sprintf("%s%s", params[11], params[3]), time.UTC)
+	//cmd.Time, err = time.ParseInLocation("020106150405", fmt.Sprintf("%s%s", params[11], params[3]), time.UTC)
 
-	if err != nil {
-		return
-	}
+	//if err != nil {
+	//	return
+	//}
+
+	cmd.Time = time.Now()
 
 	if params[4] == "A" {
 		cmd.Valid = true
@@ -143,10 +188,12 @@ func (cmd *V1Command) ParseString(cmdstr string) (err error) {
 }
 
 func (cmd *V1Command) BuildParams() (params []string, err error) {
+	err = errors.New("V1 command not support build")
 	return
 }
 
 func (cmd *V1Command) BuildString() (cmdstr string, err error) {
+	err = errors.New("V1 command not support build")
 	return
 }
 

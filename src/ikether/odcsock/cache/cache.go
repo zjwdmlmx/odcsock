@@ -13,6 +13,9 @@ import (
 	"github.com/zjwdmlmx/freecache"
 )
 
+/**
+ * freecache's proxy
+ */
 type cacheProxy struct {
 	cache *freecache.Cache
 }

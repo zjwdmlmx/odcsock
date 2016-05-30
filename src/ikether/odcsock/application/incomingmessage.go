@@ -33,6 +33,9 @@ func NewIncomingMessage(conn net.Conn) *IncomingMessage {
 	return res
 }
 
+/**
+ * Reading message from NET, And initial the IncomingMessage object
+ */
 func (v *IncomingMessage) ReadMessage() (err error) {
 	var cmd string
 
@@ -51,10 +54,6 @@ func (v *IncomingMessage) ReadMessage() (err error) {
 	v.Command = &proto.V1Command{}
 
 	err = v.Command.ParseParams(v.Params)
-
-	if err != nil {
-		return
-	}
 
 	return
 }
