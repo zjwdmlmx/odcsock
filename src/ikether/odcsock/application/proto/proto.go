@@ -34,15 +34,16 @@ func ParamsToCommand(params []string) (cmd Command, err error) {
 
 	cmdName := params[2]
 
-	if cmdName == "V1" {
-		v := &V1Command{}
-		cmd = v
-		err = v.ParseParams(params)
-	} else if cmdName == "XT" {
-
+	if cmdName == CMD_NAME_V1 {
+		cmd = &V1Command{}
+	} else if cmdName == CMD_NAME_BS {
+		cmd = &BSCommand{}
 	} else {
-		err = errors.New(fmt.Sprintf("regist command name: %s", cmdName))
+		err = errors.New(fmt.Sprintf("unregist command name: %s", cmdName))
+		return
 	}
+
+	err = cmd.ParseParams(params)
 
 	if err != nil {
 		return

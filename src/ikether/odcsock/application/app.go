@@ -8,6 +8,7 @@ package application
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -38,10 +39,10 @@ func (app *Application) Handle() (err error) {
 			continue
 		}
 
-		ctrler := app.router.GetCtrler(inComingMsg.Params[2])
+		ctrler := app.router.GetCtrler(inComingMsg.Command.GetCmd())
 
 		if ctrler == nil {
-			err = errors.New("unkonw command")
+			err = errors.New(fmt.Sprintf("unregist Controller for the given command which name is %s", inComingMsg.Command.GetCmd()))
 			log.Println(err)
 			continue
 		} else {

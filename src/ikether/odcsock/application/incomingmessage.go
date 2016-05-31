@@ -9,6 +9,7 @@ package application
 import (
 	"bufio"
 	"ikether/odcsock/application/proto"
+	"log"
 	"net"
 )
 
@@ -41,6 +42,8 @@ func (v *IncomingMessage) ReadMessage() (err error) {
 
 	cmd, err = v.buffer.ReadString('#')
 
+	log.Printf("recived command string: %s\n", cmd)
+
 	if err != nil {
 		return
 	}
@@ -51,9 +54,7 @@ func (v *IncomingMessage) ReadMessage() (err error) {
 		return
 	}
 
-	v.Command = &proto.V1Command{}
-
-	err = v.Command.ParseParams(v.Params)
+	v.Command, err = proto.ParamsToCommand(v.Params)
 
 	return
 }
