@@ -14,13 +14,13 @@ import (
 	"log"
 	"net/http"
 
-	"code.csdn.net/zjwdmlmx/odcsock/application"
-	"code.csdn.net/zjwdmlmx/odcsock/application/proto"
-	"code.csdn.net/zjwdmlmx/odcsock/cache"
-	"code.csdn.net/zjwdmlmx/odcsock/config"
-	"code.csdn.net/zjwdmlmx/odcsock/db"
-	"code.csdn.net/zjwdmlmx/odcsock/httpclient"
-	"code.csdn.net/zjwdmlmx/odcsock/model"
+	"github.com/zjwdmlmx/odcsock/application"
+	"github.com/zjwdmlmx/odcsock/application/proto"
+	"github.com/zjwdmlmx/odcsock/cache"
+	"github.com/zjwdmlmx/odcsock/config"
+	"github.com/zjwdmlmx/odcsock/db"
+	"github.com/zjwdmlmx/odcsock/httpclient"
+	"github.com/zjwdmlmx/odcsock/model"
 )
 
 const (

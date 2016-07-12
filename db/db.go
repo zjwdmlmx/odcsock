@@ -9,9 +9,9 @@ package db
 import (
 	"log"
 
-	"code.csdn.net/zjwdmlmx/odcsock/config"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
+	"github.com/zjwdmlmx/odcsock/config"
 )
 
 var DB *gorm.DB

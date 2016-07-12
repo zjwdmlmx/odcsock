@@ -11,9 +11,9 @@ import (
 	"log"
 	"net"
 
-	"code.csdn.net/zjwdmlmx/odcsock/application"
-	"code.csdn.net/zjwdmlmx/odcsock/config"
-	"code.csdn.net/zjwdmlmx/odcsock/controllers"
+	"github.com/zjwdmlmx/odcsock/application"
+	"github.com/zjwdmlmx/odcsock/config"
+	"github.com/zjwdmlmx/odcsock/controllers"
 )
 
 const (

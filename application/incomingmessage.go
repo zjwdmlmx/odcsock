@@ -11,7 +11,7 @@ import (
 	"log"
 	"net"
 
-	"code.csdn.net/zjwdmlmx/odcsock/application/proto"
+	"github.com/zjwdmlmx/odcsock/application/proto"
 )
 
 const (
