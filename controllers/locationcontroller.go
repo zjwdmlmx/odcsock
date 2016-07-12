@@ -160,6 +160,11 @@ func (ctrl *LocationController) getUid(imei string) (uid uint64, err error) {
 
 	if cacheErr != nil {
 		db.DB.Select("id").Where("imei = ?", imei).First(&user)
+		if user.Id == 0 {
+			err = errors.New("unregiste device")
+			return
+		}
+
 		uid = user.Id
 		err = cache.Cached.SSetUint64(imei, uid, 3600) // expire time is one hour
 
@@ -196,6 +201,16 @@ func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage,
 	log.Println(*Command)
 	log.Println(incomingMsg.Params)
 
+	var uid uint64
+
+	if uid, err = ctrl.getUid(Command.Id); err != nil {
+		return
+	}
+
+	if uid == 0 {
+		return
+	}
+
 	// is the incoming message a SOS
 	if Command.State == proto.DEVICE_STATE_SOS {
 		err = ctrl.sendOldSos(Command)
@@ -209,10 +224,6 @@ func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage,
 	if !Command.Valid {
 		return
 	}
-
-	var uid uint64
-
-	uid, err = ctrl.getUid(Command.Id)
 
 	currPosition := model.Position{
 		Latitude:  Command.Latitude,
