@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"github.com/zjwdmlmx/odcsock/application"
 	"github.com/zjwdmlmx/odcsock/config"
@@ -47,12 +48,40 @@ func initServer(router *application.Router) {
 	router.Route("V1", &controllers.LocationController{})
 }
 
+func initLog() {
+	var (
+		model   string
+		ok      bool
+		logPath string
+		err     error
+	)
+	if model, ok = config.Config.Get("model"); !ok {
+		log.Println("configure file's model not set. Using default debug model")
+		model = "debug"
+	}
+
+	if logPath, ok = config.Config.Get("log"); !ok {
+		log.Println("Configure file's log not set. Using default /tmp/odcsock.log")
+		logPath = "/tmp/odcsock.log"
+	}
+
+	if model == "debug" {
+		var f *os.File
+		if f, err = os.OpenFile(logPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666); err != nil {
+			panic("open log file error")
+		}
+		log.SetOutput(f)
+	}
+}
+
 func main() {
 	var (
 		port    string
 		address string
 		ok      bool
 	)
+	initLog()
+
 	port, ok = config.Config.Get("port")
 
 	if !ok {

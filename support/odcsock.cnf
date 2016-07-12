@@ -11,3 +11,9 @@ port=8898
 
 # the odcser server's host name
 odcserServerHost=https://localhost
+
+# the server model
+model=debug
+
+# log file path
+log=/var/lib/odcsock/odcsock.log
