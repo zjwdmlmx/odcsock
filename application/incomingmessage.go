@@ -8,9 +8,10 @@ package application
 
 import (
 	"bufio"
-	"ikether/odcsock/application/proto"
 	"log"
 	"net"
+
+	"code.csdn.net/zjwdmlmx/odcsock/application/proto"
 )
 
 const (

@@ -2,7 +2,7 @@
 # - type is the database type[mysql, sqlit, ...]
 # - connectingString is a string to connect to database server using by Open function
 type=mysql
-connectingString=odcser:odcser@unix(/var/run/mysql/mysql.sock)/odcser?charset=utf8&parseTime=True
+connectingString=odcser:odcser@unix(/var/run/mysql/mysql.sock)/odcser?charset=utf8&parseTime=True&loc=Local
 
 # server about
 # server's address and port to bind/listen

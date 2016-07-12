@@ -7,9 +7,9 @@
 package db
 
 import (
-	"ikether/odcsock/config"
 	"log"
 
+	"code.csdn.net/zjwdmlmx/odcsock/config"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
