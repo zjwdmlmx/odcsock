@@ -131,7 +131,7 @@ func (ctrl *LocationController) sendOldSos(cmd *proto.V1Command) (err error) {
 		Sid:  sessionid,
 		La:   cmd.Latitude,
 		Lo:   cmd.Longitude,
-		Date: cmd.Time.Unix(),
+		Date: cmd.Time.Unix() * 1000,
 		Acc:  11,
 	})
 
