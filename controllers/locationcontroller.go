@@ -16,10 +16,7 @@ import (
 
 	"github.com/zjwdmlmx/odcsock/application"
 	"github.com/zjwdmlmx/odcsock/application/proto"
-	"github.com/zjwdmlmx/odcsock/cache"
-	"github.com/zjwdmlmx/odcsock/config"
-	"github.com/zjwdmlmx/odcsock/db"
-	"github.com/zjwdmlmx/odcsock/httpclient"
+	"github.com/zjwdmlmx/odcsock/global"
 	"github.com/zjwdmlmx/odcsock/model"
 )
 
@@ -50,9 +47,23 @@ type oldSosRequest struct {
 	Acc  uint    `json:"acc"`
 }
 
+// LocationController controller of location logic
 type LocationController struct {
 	client  *http.Client
 	_buffer *bytes.Buffer
+}
+
+// electricity report
+func (ctrl *LocationController) reportElectoricity(cmd *proto.V1Command) {
+	if cmd.Electricity < 0 || cmd.Electricity > 100 {
+		return
+	}
+
+	R := global.RedisPool.Get()
+
+	if _, err := R.Do("SETEX", cmd.Id+".ele", 3600, cmd.Electricity); err != nil {
+		log.Println(err.Error())
+	}
 }
 
 // login the odcser server
@@ -62,7 +73,7 @@ func (ctrl *LocationController) loginDevice(cmd *proto.V1Command) (sessionid str
 		jsonByte []byte
 	)
 
-	db.DB.Where("imei = ?", cmd.Id).First(&device)
+	global.DB.Where("imei = ?", cmd.Id).First(&device)
 	jsonByte, err = json.Marshal(loginRequest{Imei: cmd.Id, Pass: device.Password})
 
 	if err != nil {
@@ -109,7 +120,7 @@ func (ctrl *LocationController) loginDevice(cmd *proto.V1Command) (sessionid str
 	if resObj.Req == 0 {
 		sessionid = resObj.Sid
 	} else {
-		err = errors.New("device login failed!")
+		err = errors.New("device login failed")
 	}
 	return
 }
@@ -149,24 +160,24 @@ func (ctrl *LocationController) sendOldSos(cmd *proto.V1Command) (err error) {
  * @param imei the imei code for device
  * @return user's id and error
  */
-func (ctrl *LocationController) getUid(imei string) (uid uint64, err error) {
+func (ctrl *LocationController) getUID(imei string) (uid uint64, err error) {
 	var (
 		cacheErr error
 		user     model.User
 	)
 	// take user id from cache. If user id is not exist take from database
 	// and set to cache
-	uid, cacheErr = cache.Cached.SGetUint64(imei)
+	uid, cacheErr = global.Cached.SGetUint64(imei)
 
 	if cacheErr != nil {
-		db.DB.Select("id").Where("imei = ?", imei).First(&user)
+		global.DB.Select("id").Where("imei = ?", imei).First(&user)
 		if user.Id == 0 {
 			err = errors.New("unregiste device")
 			return
 		}
 
 		uid = user.Id
-		err = cache.Cached.SSetUint64(imei, uid, 3600) // expire time is one hour
+		err = global.Cached.SSetUint64(imei, uid, 3600) // expire time is one hour
 
 		if err != nil {
 			return
@@ -177,11 +188,11 @@ func (ctrl *LocationController) getUid(imei string) (uid uint64, err error) {
 
 func (ctrl *LocationController) Init() (err error) {
 	// initial the controller
-	ctrl.client = httpclient.Client
+	ctrl.client = global.Client
 	ctrl._buffer = &bytes.Buffer{}
 
 	var ok bool
-	host, ok = config.Config.Get("odcserServerHost")
+	host, ok = global.Config.Get("odcserServerHost")
 	if !ok {
 		log.Println("odcser server 's host is not set in configure file.Using default https://localhost'")
 		host = "https://localhost"
@@ -190,11 +201,12 @@ func (ctrl *LocationController) Init() (err error) {
 	return
 }
 
+//Handle func to handle V1 command
 func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage, replay *application.Replay) (err error) {
 	Command, ok := incomingMsg.Command.(*proto.V1Command)
 
 	if !ok {
-		err = errors.New("unknow error in controller LocationController, when parse Command!")
+		err = errors.New("unknow error in controller LocationController, when parse Command")
 		return
 	}
 
@@ -203,7 +215,7 @@ func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage,
 
 	var uid uint64
 
-	if uid, err = ctrl.getUid(Command.Id); err != nil {
+	if uid, err = ctrl.getUID(Command.Id); err != nil {
 		return
 	}
 
@@ -220,6 +232,9 @@ func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage,
 		}
 	}
 
+	// electricity report
+	ctrl.reportElectoricity(Command)
+
 	// is the incoming message's data valid
 	if !Command.Valid {
 		return
@@ -233,7 +248,7 @@ func (ctrl *LocationController) Handle(incomingMsg *application.IncomingMessage,
 	}
 
 	// store the current position
-	db.DB.Create(&currPosition)
+	global.DB.Create(&currPosition)
 
 	return
 }

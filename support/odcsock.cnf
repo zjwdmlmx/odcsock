@@ -17,3 +17,6 @@ model=debug
 
 # log file path
 log=/var/lib/odcsock/odcsock.log
+
+redis_server_net=unix
+redis_server=/var/run/redis/redis.odcser.sock

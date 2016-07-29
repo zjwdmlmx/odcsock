@@ -117,7 +117,7 @@ type V1Command struct {
 	 */
 	//Speed       float32
 	//Direction   uint16
-	//Battery     uint8
+	Electricity uint8
 }
 
 func (cmd *V1Command) GetCmd() string {
@@ -148,12 +148,7 @@ func (cmd *V1Command) ParseParams(params []string) (err error) {
 		return
 	}
 
-	//cmd.Time, err = time.ParseInLocation("020106150405", fmt.Sprintf("%s%s", params[11], params[3]), time.UTC)
-
-	//if err != nil {
-	//	return
-	//}
-
+	// Note: the device's timestamp is not correct always, using server time
 	cmd.Time = time.Now()
 
 	if params[4] == "A" {
@@ -166,9 +161,12 @@ func (cmd *V1Command) ParseParams(params []string) (err error) {
 	}
 
 	var state uint64
-	state, err = strconv.ParseUint(params[12], 16, 32)
+	if state, err = strconv.ParseUint(params[12], 16, 32); err != nil {
+		return
+	}
 
-	if err != nil {
+	var electricity uint64
+	if electricity, err = strconv.ParseUint(params[13], 10, 8); err != nil {
 		return
 	}
 
@@ -176,6 +174,7 @@ func (cmd *V1Command) ParseParams(params []string) (err error) {
 	cmd.Cmd = params[2]
 	cmd.Id = params[1]
 	cmd.Vendor = params[0]
+	cmd.Electricity = uint8(electricity)
 
 	return
 }

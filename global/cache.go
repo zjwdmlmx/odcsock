@@ -4,7 +4,7 @@
 //
 // Copyright 2016 ikether. All Right reserved.
 
-package cache
+package global
 
 import (
 	"bytes"
@@ -13,9 +13,7 @@ import (
 	"github.com/zjwdmlmx/freecache"
 )
 
-/**
- * freecache's proxy
- */
+// freecache's proxy
 type cacheProxy struct {
 	cache *freecache.Cache
 }
@@ -111,8 +109,9 @@ func (cache *cacheProxy) SGetUint64(key string) (value uint64, err error) {
 	return
 }
 
+// Cached the global cache daemon
 var Cached *cacheProxy
 
-func init() {
+func initCache() {
 	Cached = newCache(40 * 1024 * 1024)
 }

@@ -4,19 +4,19 @@
 //
 // Copyright 2016 ikether. All Right reserved.
 
-package db
+package global
 
 import (
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" // mysql
 	"github.com/jinzhu/gorm"
-	"github.com/zjwdmlmx/odcsock/config"
 )
 
+// DB the global database connection object
 var DB *gorm.DB
 
-func init() {
+func initDB() {
 	var (
 		err              error
 		dbType           string
@@ -24,14 +24,14 @@ func init() {
 		ok               bool
 	)
 
-	dbType, ok = config.Config.Get("type")
+	dbType, ok = Config.Get("type")
 
 	if !ok {
 		log.Println("configure file get \"type\" failed! Using default value \"mysql\"")
 		dbType = "mysql"
 	}
 
-	connectingString, ok = config.Config.Get("connectingString")
+	connectingString, ok = Config.Get("connectingString")
 
 	if !ok {
 		log.Println("configure file get \"connectingString\" failed! Using default value \"test:test@\\test?charset=utf8&parseTime=True\"")

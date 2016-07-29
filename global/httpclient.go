@@ -4,16 +4,17 @@
 //
 // Copyright 2016 ikether. All Right reserved.
 
-package httpclient
+package global
 
 import (
 	"crypto/tls"
 	"net/http"
 )
 
+// Client the global http client object
 var Client *http.Client
 
-func init() {
+func initHttpClient() {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true, // http client with skip verify of CA

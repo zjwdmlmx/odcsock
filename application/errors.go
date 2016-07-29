@@ -16,6 +16,6 @@ type CommonError struct {
 	What string
 }
 
-func (e *CommonError) Error() string {
+func (e CommonError) Error() string {
 	return fmt.Sprintf("[%v] %s", e.When, e.What)
 }

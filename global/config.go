@@ -4,7 +4,7 @@
 //
 // Copyright 2016 ikether. All Right reserved.
 
-package config
+package global
 
 import (
 	"log"
@@ -12,9 +12,10 @@ import (
 	"github.com/zjwdmlmx/goini"
 )
 
+// Config the golbal configure object
 var Config *goini.INI
 
-func init() {
+func initConfigure() {
 	Config = goini.New()
 	// read configure from .ini file
 	err := Config.ParseFile("/etc/odcsock.cnf")

@@ -13,8 +13,8 @@ import (
 	"os"
 
 	"github.com/zjwdmlmx/odcsock/application"
-	"github.com/zjwdmlmx/odcsock/config"
 	"github.com/zjwdmlmx/odcsock/controllers"
+	"github.com/zjwdmlmx/odcsock/global"
 )
 
 const (
@@ -55,12 +55,12 @@ func initLog() {
 		logPath string
 		err     error
 	)
-	if model, ok = config.Config.Get("model"); !ok {
+	if model, ok = global.Config.Get("model"); !ok {
 		log.Println("configure file's model not set. Using default debug model")
 		model = "debug"
 	}
 
-	if logPath, ok = config.Config.Get("log"); !ok {
+	if logPath, ok = global.Config.Get("log"); !ok {
 		log.Println("Configure file's log not set. Using default /tmp/odcsock.log")
 		logPath = "/tmp/odcsock.log"
 	}
@@ -82,14 +82,14 @@ func main() {
 	)
 	initLog()
 
-	port, ok = config.Config.Get("port")
+	port, ok = global.Config.Get("port")
 
 	if !ok {
 		log.Println("configure file's port not set. Using default 8898")
 		port = "8898"
 	}
 
-	address, ok = config.Config.Get("address")
+	address, ok = global.Config.Get("address")
 
 	if !ok {
 		log.Println("configure file's address not set. Using default 0.0.0.0")
